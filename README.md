@@ -34,3 +34,20 @@ Or just run `/feature` — the orchestrator that does all of the above automatic
 - **MVP**: 3 agents, 5 commands, 1 skill, 2 references, 1 hook
 - **Quality**: + tester, dba, 4 references, 3 hooks
 - **Full**: + qa-smoke, release, nightly-tests, telemetry hooks
+
+### `seeds/` — Copy-Paste Starter Kit
+
+Ready-to-use files that bootstrap SDD in any project. Copy them into your `.claude/`
+directory and you're running.
+
+| Folder | What it is |
+|--------|-----------|
+| `seeds/agents/` | 6 AI agent definitions (architect, dev, dba, tester, code-review, qa-smoke) |
+| `seeds/commands/` | 9 slash commands forming the SDD pipeline |
+| `seeds/skills/` | Domain knowledge template (SKILL.md + reference templates) |
+| `seeds/schemas/` | JSON schema for the plan manifest |
+| `seeds/plans/` | Manifest template for new features |
+| `seeds/hooks/` | 5 bash scripts for automated safety gates |
+| `seeds/settings.json` | Hook wiring config |
+
+See [`seeds/README.md`](seeds/README.md) for installation instructions.

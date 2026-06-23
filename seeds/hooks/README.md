@@ -1,0 +1,75 @@
+# Hooks — Automated Safety Gates
+
+Hooks are shell scripts triggered by AI tool events. They enforce rules that
+prompts alone can't guarantee. Every time an agent makes a mistake that a script
+could have caught, write a hook here.
+
+## Installation
+
+```bash
+mkdir -p .claude/hooks
+cp *.sh .claude/hooks/
+chmod +x .claude/hooks/*.sh
+```
+
+Then wire them in `.claude/settings.json` (see `seeds/settings.json`).
+
+## Hook Triggers
+
+| Trigger | Fires When | Use For |
+|---------|-----------|---------|
+| `PreToolUse` | Before any tool invocation | Block invalid actions |
+| `PostToolUse` | After a tool completes | Auto-stage files, log events |
+| `SubagentStop` | When a subagent finishes | Verify deliverables |
+| `Stop` | When the session ends | Log metrics |
+| `SessionStart` | When a session begins | Detect stale plans |
+
+## Included Hooks
+
+| Hook | Trigger | Purpose |
+|------|---------|---------|
+| `auto-commit-plans.sh` | PostToolUse (Write\|Edit) | Auto-stage plan files on feature branches |
+| `check-pr-state.sh` | PreToolUse (Bash) | Block commits on branches with merged PRs |
+| `verify-deliverables.sh` | SubagentStop | Warn if manifest artifacts don't exist on disk |
+| `detect-stale-plans.sh` | SessionStart | Alert on plans whose branch is already merged |
+| `log-session-metrics.sh` | Stop | Track session stats to CSV |
+
+## Writing Your Own Hooks
+
+Hooks are plain bash scripts. They receive context from the AI tool and can:
+- **Block** an action by exiting with non-zero status (PreToolUse only)
+- **Warn** by printing to stderr (all triggers)
+- **Log** by appending to files (all triggers)
+
+### Pattern: Domain-specific validation hook
+
+```bash
+#!/bin/bash
+# Blocks creation of files that reference deprecated APIs/patterns
+MATCHES=$(grep -rl "deprecatedFunction" "$1" 2>/dev/null)
+if [ -n "$MATCHES" ]; then
+  echo "Blocked: deprecatedFunction reference found in $MATCHES"
+  exit 1
+fi
+```
+
+### When to add a hook
+
+- An agent creates a migration with a duplicate timestamp → `validate-migration-timestamp.sh`
+- An agent references a deprecated API → `validate-no-deprecated-refs.sh`
+- An agent commits to a branch whose PR is already merged → `check-pr-state.sh`
+- A subagent finishes but its declared artifacts don't exist → `verify-deliverables.sh`
+
+**Institutional memory**: every mistake that a hook could have prevented → write the hook. Over months, your safety net grows automatically.
+
+## Tool Compatibility
+
+These hooks use Claude Code's format (bash scripts wired in `settings.json`).
+Other AI tools have equivalent mechanisms:
+
+| Tool | Mechanism | Config File |
+|------|-----------|-------------|
+| Claude Code | Bash scripts | `.claude/settings.json` |
+| OpenCode | Same (mirrors Claude Code) | `.opencode/` |
+| Cursor | Custom rules / MCP servers | `.cursorrules` / MCP config |
+| Aider | Pre-commit hooks | `.aider.conf.yml` |

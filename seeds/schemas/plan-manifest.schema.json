@@ -1,0 +1,105 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "PlanManifest",
+  "description": "Contract between SDD pipeline stages. Enables smart shortcuts, resume, and verify-deliverables.",
+  "type": "object",
+  "required": ["slug", "stage", "artifacts"],
+  "properties": {
+    "$schema": { "type": "string" },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9][a-z0-9-]*$",
+      "description": "Kebab-case feature identifier"
+    },
+    "title": { "type": "string" },
+    "sponsor": { "type": "string" },
+    "branch": { "type": "string", "pattern": "^feature/" },
+    "created_at": { "type": "string", "format": "date-time" },
+    "stage": {
+      "type": "string",
+      "enum": ["discovery", "prd", "spec", "implementation", "test", "review", "pr", "done"]
+    },
+    "stages_completed": {
+      "type": "array",
+      "items": {
+        "enum": ["discovery", "prd", "spec", "implementation", "test", "review", "pr"]
+      }
+    },
+    "artifacts": {
+      "type": "object",
+      "properties": {
+        "prd": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "approved": { "type": "boolean" },
+            "approved_at": { "type": ["string", "null"], "format": "date-time" }
+          }
+        },
+        "spec": {
+          "type": "object",
+          "properties": {
+            "path": { "type": "string" },
+            "approved_at": { "type": ["string", "null"], "format": "date-time" }
+          }
+        },
+        "migrations": { "type": "array", "items": { "type": "string" } },
+        "source_files": { "type": "array", "items": { "type": "string" } },
+        "tests": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "promised_in_spec": {
+      "type": "object",
+      "description": "Snapshot of SPEC promises — used by code-review and qa-smoke to validate delivery",
+      "properties": {
+        "scenario_matrix": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["persona", "input", "ui", "backend"],
+            "properties": {
+              "persona": { "type": "string" },
+              "input": { "type": "string" },
+              "ui": { "type": "array", "items": { "type": "string" } },
+              "backend": { "type": "string" }
+            }
+          }
+        },
+        "navigation_surfaces": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "consistency_anchors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "category": { "type": "string" },
+              "canon_file": { "type": "string" },
+              "reference_doc": { "type": "string" }
+            }
+          }
+        }
+      }
+    },
+    "verification": {
+      "type": "object",
+      "description": "Quality check results (true=pass, false=fail, null=not run yet)",
+      "properties": {
+        "scenarios_validated": { "type": ["boolean", "null"] },
+        "all_nav_surfaces_updated": { "type": ["boolean", "null"] },
+        "consistency_check_passed": { "type": ["boolean", "null"] },
+        "tests_passing": { "type": ["boolean", "null"] },
+        "build_passing": { "type": ["boolean", "null"] },
+        "type_check_passing": { "type": ["boolean", "null"] }
+      }
+    },
+    "links": {
+      "type": "object",
+      "properties": {
+        "pr_url": { "type": ["string", "null"] },
+        "issue_url": { "type": ["string", "null"] }
+      }
+    }
+  }
+}

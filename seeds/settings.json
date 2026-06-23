@@ -1,0 +1,31 @@
+{
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": ".claude/hooks/auto-commit-plans.sh"
+      }
+    ],
+    "PreToolUse": [
+      {
+        "matcher": "Bash",
+        "command": ".claude/hooks/check-pr-state.sh"
+      }
+    ],
+    "SubagentStop": [
+      {
+        "command": ".claude/hooks/verify-deliverables.sh"
+      }
+    ],
+    "Stop": [
+      {
+        "command": ".claude/hooks/log-session-metrics.sh"
+      }
+    ],
+    "SessionStart": [
+      {
+        "command": ".claude/hooks/detect-stale-plans.sh"
+      }
+    ]
+  }
+}
