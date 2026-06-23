@@ -1,2 +1,36 @@
 # skills
-Agent skills
+
+My A.I. home — agent skills, workflows, and spec-driven development tooling.
+
+## Contents
+
+### `sdd/` — Spec-Driven Development
+
+A portable, domain-agnostic SDD implementation guide and ecosystem analysis for AI-assisted development.
+
+| File | Description |
+|------|-------------|
+| [`SDD-GUIDE.md`](sdd/SDD-GUIDE.md) | Complete implementation guide: folder structure, agents, skills, commands, manifest schema, hooks, seeder templates, troubleshooting, and success metrics |
+| [`SDD-VISUAL.html`](sdd/SDD-VISUAL.html) | Interactive visual presentation (open in browser) — pipeline flow, tiered adoption, core concepts, scenario matrix |
+| [`SDD-LANDSCAPE.md`](sdd/SDD-LANDSCAPE.md) | Ecosystem analysis: comparison of custom SDD vs GitHub Spec Kit, OpenSpec, AWS Kiro, BMAD, cc-sdd, and 7 other tools |
+
+#### Quick Start
+
+1. Read `SDD-GUIDE.md` for the full blueprint
+2. Open `SDD-VISUAL.html` in a browser for the visual overview
+3. Check `SDD-LANDSCAPE.md` to see how your approach compares to existing tools
+
+#### The SDD Pipeline
+
+```
+/discovery → /prd → /spec → /developer → /test-suite → /code-review → /pr
+ (refine)    (what)  (how)    (build it)    (test it)     (check it)    (ship it)
+```
+
+Or just run `/feature` — the orchestrator that does all of the above automatically.
+
+#### Tiers
+
+- **MVP**: 3 agents, 5 commands, 1 skill, 2 references, 1 hook
+- **Quality**: + tester, dba, 4 references, 3 hooks
+- **Full**: + qa-smoke, release, nightly-tests, telemetry hooks

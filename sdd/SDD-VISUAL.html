@@ -1,0 +1,939 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Spec-Driven Development (SDD)</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --bg-base: #000000;
+            --bg-surface: #0a0a0a;
+            --bg-card: rgba(255, 255, 255, 0.03);
+            --bg-card-hover: rgba(255, 255, 255, 0.06);
+            --border-subtle: rgba(255, 255, 255, 0.1);
+            --border-highlight: rgba(255, 255, 255, 0.2);
+            --text-primary: #ededed;
+            --text-secondary: #a1a1aa;
+            --text-muted: #71717a;
+            --accent-primary: #8b5cf6;
+            --accent-secondary: #3b82f6;
+            --accent-gradient: linear-gradient(135deg, var(--accent-primary), var(--accent-secondary));
+            --success: #10b981;
+            --danger: #ef4444;
+            --warning: #f59e0b;
+            --font-sans: 'Inter', sans-serif;
+            --font-mono: 'JetBrains Mono', monospace;
+            --radius-md: 8px;
+            --radius-lg: 12px;
+            --radius-xl: 16px;
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        html { scroll-behavior: smooth; }
+        
+        body {
+            font-family: var(--font-sans);
+            background-color: var(--bg-base);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        h1, h2, h3, h4 { font-weight: 600; line-height: 1.2; letter-spacing: -0.02em; }
+        h1 { font-size: clamp(2.5rem, 5vw, 4.5rem); background: var(--accent-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 1.5rem; }
+        h2 { font-size: clamp(2rem, 4vw, 2.5rem); margin-bottom: 2.5rem; }
+        h3 { font-size: 1.25rem; margin-bottom: 1rem; color: var(--text-primary); }
+        p { color: var(--text-secondary); margin-bottom: 1rem; font-size: 1.05rem; }
+        
+        code { 
+            font-family: var(--font-mono); 
+            font-size: 0.85em; 
+            background: rgba(255,255,255,0.08); 
+            padding: 0.2em 0.4em; 
+            border-radius: 4px; 
+            color: #e4e4e7; 
+        }
+
+        .container { max-width: 1200px; margin: 0 auto; padding: 0 2rem; }
+        
+        section { 
+            min-height: 100vh; 
+            display: flex; 
+            flex-direction: column; 
+            justify-content: center; 
+            padding: 8rem 0; 
+            position: relative; 
+            border-bottom: 1px solid var(--border-subtle);
+        }
+        section:last-child { border-bottom: none; }
+
+        /* Navigation */
+        nav { 
+            position: fixed; 
+            top: 0; left: 0; right: 0; 
+            background: rgba(0,0,0,0.7); 
+            backdrop-filter: blur(16px); 
+            -webkit-backdrop-filter: blur(16px);
+            border-bottom: 1px solid var(--border-subtle); 
+            z-index: 100; 
+        }
+        .nav-content { 
+            display: flex; 
+            justify-content: space-between; 
+            align-items: center; 
+            height: 64px; 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 0 2rem; 
+        }
+        .nav-logo { font-weight: 700; letter-spacing: -0.02em; font-size: 1.1rem; }
+        .nav-links { display: flex; gap: 2rem; }
+        .nav-links a { 
+            color: var(--text-secondary); 
+            text-decoration: none; 
+            font-size: 0.9rem; 
+            font-weight: 500;
+            transition: var(--transition); 
+        }
+        .nav-links a:hover { color: var(--text-primary); }
+        .progress-bar { 
+            position: absolute; 
+            bottom: -1px; left: 0; 
+            height: 2px; 
+            background: var(--accent-gradient); 
+            width: 0%; 
+            transition: width 0.1s ease-out; 
+        }
+
+        /* Animations */
+        .fade-up { 
+            opacity: 0; 
+            transform: translateY(40px); 
+            transition: opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1), transform 0.8s cubic-bezier(0.16, 1, 0.3, 1); 
+        }
+        .fade-up.visible { opacity: 1; transform: translateY(0); }
+        .delay-1 { transition-delay: 0.1s; }
+        .delay-2 { transition-delay: 0.2s; }
+        .delay-3 { transition-delay: 0.3s; }
+
+        /* Hero Section */
+        .hero-subtitle { font-size: 1.25rem; max-width: 800px; margin-bottom: 4rem; line-height: 1.6; }
+        
+        .pipeline-flow { 
+            display: flex; 
+            align-items: center; 
+            justify-content: space-between; 
+            flex-wrap: nowrap; 
+            gap: 0.5rem; 
+            background: var(--bg-surface);
+            padding: 2rem;
+            border-radius: var(--radius-xl);
+            border: 1px solid var(--border-subtle);
+            overflow-x: auto;
+            padding-bottom: 2.5rem; /* Scrollbar space */
+        }
+        .pipeline-stage { 
+            background: var(--bg-card); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-lg); 
+            padding: 1.5rem 1rem; 
+            text-align: center; 
+            flex: 1; 
+            min-width: 130px; 
+            position: relative; 
+            transition: var(--transition); 
+            cursor: pointer; 
+            text-decoration: none; 
+            color: inherit; 
+        }
+        .pipeline-stage:hover { 
+            transform: translateY(-8px); 
+            border-color: var(--accent-primary); 
+            background: var(--bg-card-hover);
+            box-shadow: 0 12px 40px -10px rgba(139, 92, 246, 0.2); 
+        }
+        .stage-icon { font-size: 1.8rem; margin-bottom: 0.75rem; display: block; }
+        .stage-name { font-weight: 600; font-size: 0.95rem; margin-bottom: 0.5rem; display: block; }
+        .stage-cmd { font-family: var(--font-mono); font-size: 0.75rem; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 0.2rem 0.5rem; border-radius: 4px; }
+        .pipeline-arrow { color: var(--border-highlight); font-size: 1.2rem; flex-shrink: 0; }
+
+        /* Grids & Cards */
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 2rem; }
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 2rem; }
+        
+        .card { 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-lg); 
+            padding: 2.5rem; 
+            transition: var(--transition); 
+            position: relative;
+            overflow: hidden;
+        }
+        .card:hover { 
+            border-color: var(--border-highlight); 
+            background: var(--bg-card-hover); 
+        }
+        
+        /* Tier Cards */
+        .tier-card::before { 
+            content: ''; 
+            position: absolute; 
+            top: 0; left: 0; right: 0; 
+            height: 4px; 
+        }
+        .tier-mvp::before { background: var(--success); }
+        .tier-quality::before { background: var(--accent-secondary); }
+        .tier-full::before { background: var(--accent-primary); }
+        
+        .tier-header { margin-bottom: 2rem; padding-bottom: 1.5rem; border-bottom: 1px solid var(--border-subtle); }
+        .tier-title { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem; }
+        .tier-icon { font-size: 1.5rem; }
+        
+        .tier-list { list-style: none; }
+        .tier-list li { 
+            margin-bottom: 1rem; 
+            font-size: 0.95rem; 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 0.75rem; 
+            color: var(--text-secondary);
+        }
+        .tier-list li::before { content: '→'; color: var(--text-muted); font-family: var(--font-mono); }
+        .tier-list strong { color: var(--text-primary); font-weight: 500; }
+
+        /* Pipeline Detail (Vertical Stepped) */
+        .stepped-diagram { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 2rem; 
+            position: relative; 
+            padding-left: 2.5rem; 
+        }
+        .stepped-diagram::before { 
+            content: ''; 
+            position: absolute; 
+            left: 11px; top: 0; bottom: 0; 
+            width: 2px; 
+            background: linear-gradient(to bottom, var(--border-subtle), var(--border-highlight), var(--border-subtle)); 
+        }
+        .step-item { 
+            position: relative; 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-lg); 
+            padding: 2rem; 
+            display: grid; 
+            grid-template-columns: 1fr 2fr 1fr; 
+            gap: 2rem; 
+            align-items: center; 
+            transition: var(--transition);
+        }
+        .step-item:hover { border-color: var(--border-highlight); transform: translateX(5px); }
+        .step-item::before { 
+            content: ''; 
+            position: absolute; 
+            left: -2.5rem; top: 50%; 
+            transform: translateY(-50%); 
+            width: 20px; height: 20px; 
+            border-radius: 50%; 
+            background: var(--bg-base); 
+            border: 3px solid var(--accent-primary); 
+            z-index: 2; 
+            box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+        }
+        .step-meta { display: flex; flex-direction: column; gap: 0.5rem; }
+        .step-title { font-size: 1.2rem; font-weight: 600; color: var(--text-primary); }
+        .step-agent { display: flex; align-items: center; gap: 0.5rem; font-size: 0.9rem; color: var(--text-secondary); }
+        
+        .step-badge { 
+            display: inline-block; 
+            padding: 0.25rem 0.75rem; 
+            border-radius: 999px; 
+            font-size: 0.75rem; 
+            font-weight: 600; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+            width: fit-content; 
+        }
+        .badge-mvp { background: rgba(16, 185, 129, 0.1); color: var(--success); border: 1px solid rgba(16, 185, 129, 0.2); }
+        .badge-quality { background: rgba(59, 130, 246, 0.1); color: var(--accent-secondary); border: 1px solid rgba(59, 130, 246, 0.2); }
+        .badge-full { background: rgba(139, 92, 246, 0.1); color: var(--accent-primary); border: 1px solid rgba(139, 92, 246, 0.2); }
+        
+        .step-io { 
+            display: flex; 
+            align-items: center; 
+            gap: 1rem; 
+            font-family: var(--font-mono); 
+            font-size: 0.85rem; 
+            background: rgba(0,0,0,0.3);
+            padding: 1rem;
+            border-radius: var(--radius-md);
+            border: 1px solid var(--border-subtle);
+        }
+        .step-io-arrow { color: var(--accent-primary); }
+        .step-gate { font-size: 0.85rem; color: var(--text-secondary); display: flex; flex-direction: column; gap: 0.25rem; }
+        .gate-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-muted); }
+
+        /* Folder Tree */
+        .folder-tree { 
+            font-family: var(--font-mono); 
+            font-size: 0.95rem; 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-lg); 
+            padding: 2.5rem; 
+            overflow-x: auto; 
+            line-height: 1.8;
+        }
+        .tree-item { display: flex; align-items: center; gap: 0.5rem; }
+        .tree-item:hover { background: rgba(255,255,255,0.02); border-radius: 4px; }
+        .tree-indent { display: inline-block; color: var(--border-highlight); white-space: pre; }
+        .tree-folder { color: var(--accent-secondary); font-weight: 500; }
+        .tree-file { color: #e4e4e7; }
+        .tree-comment { color: var(--text-muted); font-style: italic; margin-left: 2rem; font-family: var(--font-sans); font-size: 0.85rem; }
+
+        /* Scenario Matrix Table */
+        .matrix-wrapper { 
+            overflow-x: auto; 
+            background: var(--bg-surface); 
+            border: 1px solid var(--border-subtle); 
+            border-radius: var(--radius-lg); 
+            box-shadow: 0 20px 40px -20px rgba(0,0,0,0.5);
+        }
+        .matrix-table { width: 100%; border-collapse: collapse; text-align: left; }
+        .matrix-table th, .matrix-table td { padding: 1.25rem 1.5rem; border-bottom: 1px solid var(--border-subtle); }
+        .matrix-table th { 
+            background: rgba(255,255,255,0.02); 
+            font-weight: 600; 
+            color: var(--text-primary); 
+            font-size: 0.85rem; 
+            text-transform: uppercase; 
+            letter-spacing: 0.05em; 
+        }
+        .matrix-table tr:last-child td { border-bottom: none; }
+        .matrix-table tbody tr { transition: var(--transition); }
+        .matrix-table tbody tr:hover { background: var(--bg-card-hover); }
+        .cell-persona { font-weight: 500; color: var(--accent-secondary); }
+        .cell-code { font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary); }
+
+        /* When to Use */
+        .checklist { list-style: none; }
+        .checklist li { 
+            margin-bottom: 1.25rem; 
+            display: flex; 
+            align-items: flex-start; 
+            gap: 1rem; 
+            font-size: 1.05rem;
+            color: var(--text-secondary);
+        }
+        .check-icon { color: var(--success); font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+        .cross-icon { color: var(--danger); font-size: 1.2rem; flex-shrink: 0; margin-top: 0.1rem; }
+
+        /* Quick Reference */
+        .quick-ref { 
+            background: linear-gradient(145deg, rgba(139, 92, 246, 0.05), rgba(59, 130, 246, 0.05)); 
+            border: 1px solid rgba(139, 92, 246, 0.2); 
+            text-align: center;
+        }
+        .quick-ref-flow {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            margin: 2rem 0;
+            font-family: var(--font-mono);
+            font-size: 0.95rem;
+        }
+        .hotfix-path { 
+            background: rgba(239, 68, 68, 0.05); 
+            border: 1px dashed rgba(239, 68, 68, 0.3); 
+            padding: 1.5rem; 
+            border-radius: var(--radius-md); 
+            margin-top: 2rem; 
+            text-align: left;
+        }
+        .hotfix-title { color: var(--danger); font-weight: 600; margin-bottom: 0.5rem; font-size: 0.9rem; text-transform: uppercase; letter-spacing: 0.05em; }
+
+        /* Responsive */
+        @media (max-width: 992px) {
+            .grid-3 { grid-template-columns: 1fr; }
+            .grid-2 { grid-template-columns: 1fr; }
+            .step-item { grid-template-columns: 1fr; gap: 1.5rem; }
+            .step-item::before { left: -2.5rem; }
+            .nav-links { display: none; } /* Simple mobile nav */
+        }
+        @media (max-width: 768px) {
+            section { padding: 5rem 0; }
+            .pipeline-flow { flex-direction: column; align-items: stretch; }
+            .pipeline-arrow { transform: rotate(90deg); text-align: center; margin: 0.5rem 0; }
+            .stepped-diagram { padding-left: 1.5rem; }
+            .stepped-diagram::before { left: 3px; }
+            .step-item::before { left: -1.5rem; width: 16px; height: 16px; }
+        }
+    </style>
+</head>
+<body>
+
+    <nav>
+        <div class="nav-content">
+            <div class="nav-logo">SDD Guide</div>
+            <div class="nav-links">
+                <a href="#hero">Pipeline</a>
+                <a href="#tiers">Tiers</a>
+                <a href="#details">Stages</a>
+                <a href="#structure">Structure</a>
+                <a href="#concepts">Concepts</a>
+                <a href="#matrix">Matrix</a>
+            </div>
+        </div>
+        <div class="progress-bar" id="progressBar"></div>
+    </nav>
+
+    <div class="container">
+        <!-- Hero Section -->
+        <section id="hero">
+            <div class="fade-up">
+                <h1>Spec-Driven Development</h1>
+                <p class="hero-subtitle">An assembly line for AI-assisted feature development. Constrain agents with a structured pipeline, specialized roles, and injectable domain knowledge to produce consistent, context-aware code.</p>
+            </div>
+
+            <div class="pipeline-flow fade-up delay-1">
+                <a href="#details" class="pipeline-stage">
+                    <span class="stage-icon">🔍</span>
+                    <span class="stage-name">Discovery</span>
+                    <span class="stage-cmd">/discovery</span>
+                </a>
+                <div class="pipeline-arrow">→</div>
+                
+                <a href="#details" class="pipeline-stage">
+                    <span class="stage-icon">📝</span>
+                    <span class="stage-name">PRD</span>
+                    <span class="stage-cmd">/prd</span>
+                </a>
+                <div class="pipeline-arrow">→</div>
+                
+                <a href="#details" class="pipeline-stage">
+                    <span class="stage-icon">📐</span>
+                    <span class="stage-name">SPEC</span>
+                    <span class="stage-cmd">/spec</span>
+                </a>
+                <div class="pipeline-arrow">→</div>
+                
+                <a href="#details" class="pipeline-stage">
+                    <span class="stage-icon">💻</span>
+                    <span class="stage-name">Implementation</span>
+                    <span class="stage-cmd">/developer</span>
+                </a>
+                <div class="pipeline-arrow">→</div>
+                
+                <a href="#details" class="pipeline-stage">
+                    <span class="stage-icon">🧪</span>
+                    <span class="stage-name">Tests</span>
+                    <span class="stage-cmd">/test-suite</span>
+                </a>
+                <div class="pipeline-arrow">→</div>
+                
+                <a href="#details" class="pipeline-stage">
+                    <span class="stage-icon">🧐</span>
+                    <span class="stage-name">Review</span>
+                    <span class="stage-cmd">/code-review</span>
+                </a>
+                <div class="pipeline-arrow">→</div>
+                
+                <a href="#details" class="pipeline-stage">
+                    <span class="stage-icon">🚀</span>
+                    <span class="stage-name">PR</span>
+                    <span class="stage-cmd">/pr</span>
+                </a>
+            </div>
+        </section>
+
+        <!-- Tiered Adoption -->
+        <section id="tiers">
+            <div class="fade-up">
+                <h2>Tiered Adoption</h2>
+                <p>Don't boil the ocean. Start at the tier that matches your project and grow as needed.</p>
+            </div>
+
+            <div class="grid-3 fade-up delay-1">
+                <div class="card tier-card tier-mvp">
+                    <div class="tier-header">
+                        <div class="tier-title">
+                            <span class="tier-icon">🌱</span>
+                            <h3>MVP SDD</h3>
+                        </div>
+                        <p style="font-size: 0.9rem; margin:0;">Solo dev or small project, new codebase. ~30 min setup.</p>
+                    </div>
+                    <ul class="tier-list">
+                        <li><strong>Agents:</strong> architect, dev, code-review</li>
+                        <li><strong>Commands:</strong> /feature, /prd, /spec, /developer, /pr</li>
+                        <li><strong>Skills:</strong> 1 domain skill (SKILL.md only)</li>
+                        <li><strong>References:</strong> architecture.md, shared-ui-inventory.md</li>
+                        <li><strong>Hooks:</strong> auto-commit-plans.sh</li>
+                    </ul>
+                </div>
+
+                <div class="card tier-card tier-quality">
+                    <div class="tier-header">
+                        <div class="tier-title">
+                            <span class="tier-icon">🛡️</span>
+                            <h3>Quality SDD</h3>
+                        </div>
+                        <p style="font-size: 0.9rem; margin:0;">Small team, production project. Adds safety nets.</p>
+                    </div>
+                    <ul class="tier-list">
+                        <li><strong>Agents:</strong> + tester, dba</li>
+                        <li><strong>Commands:</strong> + /test-suite</li>
+                        <li><strong>Skills:</strong> + references/ subfolder</li>
+                        <li><strong>References:</strong> + forms.md, dialogs.md, query-patterns.md, navigation-surfaces.md</li>
+                        <li><strong>Hooks:</strong> + check-pr-state.sh, verify-deliverables.sh, detect-stale-plans.sh</li>
+                    </ul>
+                </div>
+
+                <div class="card tier-card tier-full">
+                    <div class="tier-header">
+                        <div class="tier-title">
+                            <span class="tier-icon">🏭</span>
+                            <h3>Full SDD</h3>
+                        </div>
+                        <p style="font-size: 0.9rem; margin:0;">Team, complex domain, CI/CD. Full lifecycle.</p>
+                    </div>
+                    <ul class="tier-list">
+                        <li><strong>Agents:</strong> + qa-smoke</li>
+                        <li><strong>Commands:</strong> + /plan-sync, /release, /nightly-tests, /annotate, /review</li>
+                        <li><strong>Plans:</strong> + nightly-tests/ coverage tracker</li>
+                        <li><strong>Hooks:</strong> + log-session-metrics.sh, domain-specific hooks</li>
+                        <li><strong>Processes:</strong> Release audit gates, doc-debt detection</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pipeline Detail -->
+        <section id="details">
+            <div class="fade-up">
+                <h2>Pipeline Stages</h2>
+                <p>The step-by-step journey of a feature from idea to merged code.</p>
+            </div>
+
+            <div class="stepped-diagram fade-up delay-1">
+                <div class="step-item">
+                    <div class="step-meta">
+                        <span class="step-badge badge-quality">Quality Tier</span>
+                        <div class="step-title">0. Discovery</div>
+                        <div class="step-agent">👤 Product Analyst</div>
+                    </div>
+                    <div class="step-io">
+                        <span>Informal Request</span>
+                        <span class="step-io-arrow">→</span>
+                        <span>Structured Prompt</span>
+                    </div>
+                    <div class="step-gate">
+                        <span class="gate-label">Gate</span>
+                        <span>User confirms prompt</span>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-meta">
+                        <span class="step-badge badge-mvp">MVP Tier</span>
+                        <div class="step-title">1. PRD</div>
+                        <div class="step-agent">🏗️ architect</div>
+                    </div>
+                    <div class="step-io">
+                        <span>Prompt</span>
+                        <span class="step-io-arrow">→</span>
+                        <span>PRD.md</span>
+                    </div>
+                    <div class="step-gate">
+                        <span class="gate-label">Gate</span>
+                        <span style="color: var(--danger); font-weight: 500;">User Approval (Hard Gate)</span>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-meta">
+                        <span class="step-badge badge-mvp">MVP Tier</span>
+                        <div class="step-title">2. SPEC</div>
+                        <div class="step-agent">🏗️ architect</div>
+                    </div>
+                    <div class="step-io">
+                        <span>PRD.md</span>
+                        <span class="step-io-arrow">→</span>
+                        <span>SPEC.md</span>
+                    </div>
+                    <div class="step-gate">
+                        <span class="gate-label">Gate</span>
+                        <span>Auto (Manifest updated)</span>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-meta">
+                        <span class="step-badge badge-mvp">MVP Tier</span>
+                        <div class="step-title">3. Implementation</div>
+                        <div class="step-agent">💻 dev + 🗄️ dba (Parallel)</div>
+                    </div>
+                    <div class="step-io">
+                        <span>SPEC.md</span>
+                        <span class="step-io-arrow">→</span>
+                        <span>Code + Migrations</span>
+                    </div>
+                    <div class="step-gate">
+                        <span class="gate-label">Gate</span>
+                        <span>Auto</span>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-meta">
+                        <span class="step-badge badge-quality">Quality Tier</span>
+                        <div class="step-title">3.5 Tests</div>
+                        <div class="step-agent">🧪 tester</div>
+                    </div>
+                    <div class="step-io">
+                        <span>Code</span>
+                        <span class="step-io-arrow">→</span>
+                        <span>*.test.* files</span>
+                    </div>
+                    <div class="step-gate">
+                        <span class="gate-label">Gate</span>
+                        <span style="color: var(--success);">Tests passing</span>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-meta">
+                        <span class="step-badge badge-mvp">MVP Tier</span>
+                        <div class="step-title">4. Review</div>
+                        <div class="step-agent">🧐 code-review</div>
+                    </div>
+                    <div class="step-io">
+                        <span>Changes</span>
+                        <span class="step-io-arrow">→</span>
+                        <span>Review Report</span>
+                    </div>
+                    <div class="step-gate">
+                        <span class="gate-label">Gate</span>
+                        <span>No critical issues</span>
+                    </div>
+                </div>
+
+                <div class="step-item">
+                    <div class="step-meta">
+                        <span class="step-badge badge-mvp">MVP Tier</span>
+                        <div class="step-title">5. PR</div>
+                        <div class="step-agent">🚀 PR Manager</div>
+                    </div>
+                    <div class="step-io">
+                        <span>Branch</span>
+                        <span class="step-io-arrow">→</span>
+                        <span>GitHub PR</span>
+                    </div>
+                    <div class="step-gate">
+                        <span class="gate-label">Gate</span>
+                        <span>CI passing</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Folder Structure -->
+        <section id="structure">
+            <div class="fade-up">
+                <h2>Folder Structure</h2>
+                <p>The anatomy of an SDD-enabled project. All configuration lives in <code>.claude/</code> (or <code>.opencode/</code>).</p>
+            </div>
+
+            <div class="folder-tree fade-up delay-1">
+                <div class="tree-item"><span class="tree-folder">📁 .claude/</span></div>
+                <div class="tree-item"><span class="tree-indent">├── </span><span class="tree-file">📄 settings.json</span><span class="tree-comment">Hook wiring, agent config</span></div>
+                <div class="tree-item"><span class="tree-indent">│</span></div>
+                <div class="tree-item"><span class="tree-indent">├── </span><span class="tree-folder">📁 agents/</span><span class="tree-comment">AI team member definitions</span></div>
+                <div class="tree-item"><span class="tree-indent">│   ├── </span><span class="tree-file">📄 architect.md</span><span class="tree-comment">Plans features (read-only)</span></div>
+                <div class="tree-item"><span class="tree-indent">│   ├── </span><span class="tree-file">📄 dev.md</span><span class="tree-comment">Implements application code</span></div>
+                <div class="tree-item"><span class="tree-indent">│   └── </span><span class="tree-file">📄 code-review.md</span><span class="tree-comment">Reviews changes (read-only)</span></div>
+                <div class="tree-item"><span class="tree-indent">│</span></div>
+                <div class="tree-item"><span class="tree-indent">├── </span><span class="tree-folder">📁 commands/</span><span class="tree-comment">Slash commands (pipeline stages)</span></div>
+                <div class="tree-item"><span class="tree-indent">│   ├── </span><span class="tree-file">📄 feature.md</span><span class="tree-comment">Orchestrator: runs all stages</span></div>
+                <div class="tree-item"><span class="tree-indent">│   └── </span><span class="tree-file">📄 prd.md, spec.md...</span></div>
+                <div class="tree-item"><span class="tree-indent">│</span></div>
+                <div class="tree-item"><span class="tree-indent">├── </span><span class="tree-folder">📁 skills/</span><span class="tree-comment">Injectable domain knowledge</span></div>
+                <div class="tree-item"><span class="tree-indent">│   └── </span><span class="tree-folder">📁 &lt;your-domain&gt;/</span></div>
+                <div class="tree-item"><span class="tree-indent">│       └── </span><span class="tree-file">📄 SKILL.md</span><span class="tree-comment">Index + inviolable rules</span></div>
+                <div class="tree-item"><span class="tree-indent">│</span></div>
+                <div class="tree-item"><span class="tree-indent">├── </span><span class="tree-folder">📁 references/</span><span class="tree-comment">Canonical pattern docs</span></div>
+                <div class="tree-item"><span class="tree-indent">│   ├── </span><span class="tree-file">📄 architecture.md</span><span class="tree-comment">Layer rules, import hierarchy</span></div>
+                <div class="tree-item"><span class="tree-indent">│   └── </span><span class="tree-file">📄 shared-ui-inventory.md</span><span class="tree-comment">Catalog of reusable components</span></div>
+                <div class="tree-item"><span class="tree-indent">│</span></div>
+                <div class="tree-item"><span class="tree-indent">├── </span><span class="tree-folder">📁 schemas/</span></div>
+                <div class="tree-item"><span class="tree-indent">│   └── </span><span class="tree-file">📄 plan-manifest.schema.json</span><span class="tree-comment">JSON schema for feature manifests</span></div>
+                <div class="tree-item"><span class="tree-indent">│</span></div>
+                <div class="tree-item"><span class="tree-indent">├── </span><span class="tree-folder">📁 plans/</span><span class="tree-comment">One folder per feature</span></div>
+                <div class="tree-item"><span class="tree-indent">│   ├── </span><span class="tree-file">📄 _manifest.template.json</span></div>
+                <div class="tree-item"><span class="tree-indent">│   └── </span><span class="tree-folder">📁 {feature-slug}/</span></div>
+                <div class="tree-item"><span class="tree-indent">│       ├── </span><span class="tree-file">📄 manifest.json</span><span class="tree-comment">Stage tracker + artifact registry</span></div>
+                <div class="tree-item"><span class="tree-indent">│       ├── </span><span class="tree-file">📄 PRD.md & SPEC.md</span></div>
+                <div class="tree-item"><span class="tree-indent">│       └── </span><span class="tree-file">📄 LOG.md</span><span class="tree-comment">Execution log</span></div>
+                <div class="tree-item"><span class="tree-indent">│</span></div>
+                <div class="tree-item"><span class="tree-indent">└── </span><span class="tree-folder">📁 hooks/</span><span class="tree-comment">Shell scripts for automation</span></div>
+                <div class="tree-item"><span class="tree-indent">    └── </span><span class="tree-file">📄 auto-commit-plans.sh</span></div>
+            </div>
+        </section>
+
+        <!-- Core Concepts -->
+        <section id="concepts">
+            <div class="fade-up">
+                <h2>Core Concepts</h2>
+                <p>The six pillars that make Spec-Driven Development work.</p>
+            </div>
+
+            <div class="grid-3 fade-up delay-1">
+                <div class="card">
+                    <div class="tier-title">
+                        <span class="tier-icon">🤖</span>
+                        <h3>Agents</h3>
+                    </div>
+                    <p>Your AI Team. Specialized roles with scoped permissions.</p>
+                    <ul class="tier-list" style="margin-top: 1rem;">
+                        <li>Read-only agents can't break prod</li>
+                        <li>Write-scoped agents stay in their lane</li>
+                        <li>Failure modes act as institutional memory</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="tier-title">
+                        <span class="tier-icon">🧠</span>
+                        <h3>Skills</h3>
+                    </div>
+                    <p>Injectable domain knowledge. The highest-leverage artifact.</p>
+                    <ul class="tier-list" style="margin-top: 1rem;">
+                        <li>Inviolable business rules</li>
+                        <li>Canonical vocabulary</li>
+                        <li>Schema gotchas and traps</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="tier-title">
+                        <span class="tier-icon">⚡</span>
+                        <h3>Commands</h3>
+                    </div>
+                    <p>The Pipeline. Slash commands that orchestrate the flow.</p>
+                    <ul class="tier-list" style="margin-top: 1rem;">
+                        <li><code>/feature</code> runs all stages</li>
+                        <li>Each command updates the manifest</li>
+                        <li>Context is cleared between stages</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="tier-title">
+                        <span class="tier-icon">📜</span>
+                        <h3>Plans & Manifest</h3>
+                    </div>
+                    <p>The Contract. Tracks lifecycle and artifacts.</p>
+                    <ul class="tier-list" style="margin-top: 1rem;">
+                        <li><code>manifest.json</code> is the source of truth</li>
+                        <li>Scenario Matrix forces clarity</li>
+                        <li>Enables smart resume and verification</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="tier-title">
+                        <span class="tier-icon">📚</span>
+                        <h3>References</h3>
+                    </div>
+                    <p>Canonical Patterns. Prevents agents from reinventing solutions.</p>
+                    <ul class="tier-list" style="margin-top: 1rem;">
+                        <li>Routing tables: "use this, not that"</li>
+                        <li>Points to gold-standard files</li>
+                        <li>Shared UI inventory is mandatory</li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <div class="tier-title">
+                        <span class="tier-icon">🪝</span>
+                        <h3>Hooks</h3>
+                    </div>
+                    <p>Automated Safety Gates. Enforce rules prompts can't.</p>
+                    <ul class="tier-list" style="margin-top: 1rem;">
+                        <li>Triggered on tool events</li>
+                        <li>Block invalid actions (e.g., bad migrations)</li>
+                        <li>Auto-stage files and log metrics</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Scenario Matrix -->
+        <section id="matrix">
+            <div class="fade-up">
+                <h2>Scenario Matrix</h2>
+                <p>The single most important artifact in SDD. It captures who sees what and what happens for every persona × state combination, forcing ambiguity to surface before any code is written.</p>
+            </div>
+
+            <div class="matrix-wrapper fade-up delay-1">
+                <table class="matrix-table">
+                    <thead>
+                        <tr>
+                            <th>Persona</th>
+                            <th>State / Input</th>
+                            <th>What they SEE in the UI</th>
+                            <th>What happens in the BACKEND</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td class="cell-persona">Admin</td>
+                            <td>Opens form</td>
+                            <td>Full edit + override controls</td>
+                            <td class="cell-code">Rule applied + logged to audit_trail</td>
+                        </tr>
+                        <tr>
+                            <td class="cell-persona">User (Seller)</td>
+                            <td>Opens form</td>
+                            <td>Read-only display of aggregated values</td>
+                            <td class="cell-code">Rule applied server-side (opaque)</td>
+                        </tr>
+                        <tr>
+                            <td class="cell-persona">Guest</td>
+                            <td>Attempts access</td>
+                            <td>Access denied screen</td>
+                            <td class="cell-code">403 Forbidden response</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </section>
+
+        <!-- When to Use -->
+        <section id="whentouse">
+            <div class="fade-up">
+                <h2>When to Use SDD</h2>
+                <p>SDD is powerful, but it adds ceremony. Know when to apply it.</p>
+            </div>
+
+            <div class="grid-2 fade-up delay-1">
+                <div class="card">
+                    <h3 style="color: var(--success); display: flex; align-items: center; gap: 0.5rem;">
+                        <span>✅</span> Good Fit
+                    </h3>
+                    <ul class="checklist" style="margin-top: 1.5rem;">
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <div><strong>Recurring feature work</strong><br><span style="font-size: 0.9rem;">Not just one-off scripts.</span></div>
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <div><strong>Regular AI usage</strong><br><span style="font-size: 0.9rem;">You use agents for implementation.</span></div>
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <div><strong>Complex business rules</strong><br><span style="font-size: 0.9rem;">Agents need to respect constraints consistently.</span></div>
+                        </li>
+                        <li>
+                            <span class="check-icon">✓</span>
+                            <div><strong>Need for auditability</strong><br><span style="font-size: 0.9rem;">Who decided what, when, and why.</span></div>
+                        </li>
+                    </ul>
+                </div>
+
+                <div class="card">
+                    <h3 style="color: var(--danger); display: flex; align-items: center; gap: 0.5rem;">
+                        <span>❌</span> Overkill
+                    </h3>
+                    <ul class="checklist" style="margin-top: 1.5rem;">
+                        <li>
+                            <span class="cross-icon">✕</span>
+                            <div><strong>Typo fixes & config tweaks</strong><br><span style="font-size: 0.9rem;">Just do the change, no PRD needed.</span></div>
+                        </li>
+                        <li>
+                            <span class="cross-icon">✕</span>
+                            <div><strong>Prototypes / throwaway code</strong><br><span style="font-size: 0.9rem;">SDD adds ceremony that slows exploration.</span></div>
+                        </li>
+                        <li>
+                            <span class="cross-icon">✕</span>
+                            <div><strong>Solo dev + simple domain</strong><br><span style="font-size: 0.9rem;">If you hold it all in your head, skills are dead weight.</span></div>
+                        </li>
+                        <li>
+                            <span class="cross-icon">✕</span>
+                            <div><strong>No AI agents</strong><br><span style="font-size: 0.9rem;">Without agents, it's just heavy process.</span></div>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Quick Reference -->
+        <section id="quickref">
+            <div class="fade-up">
+                <h2>Quick Reference</h2>
+            </div>
+
+            <div class="card quick-ref fade-up delay-1">
+                <h3>Pipeline Flow</h3>
+                <div class="quick-ref-flow">
+                    <div>/discovery "informal request" → structured prompt</div>
+                    <div style="color: var(--accent-primary);">↓</div>
+                    <div>/feature "structured prompt" → full pipeline</div>
+                    <div style="color: var(--text-muted); font-size: 0.85rem; margin-top: 0.5rem;">
+                        (PRD → SPEC → Implementation → Tests → Review → PR)
+                    </div>
+                </div>
+                
+                <div style="display: flex; justify-content: center; gap: 2rem; flex-wrap: wrap; margin-top: 2rem; font-family: var(--font-mono); font-size: 0.85rem; color: var(--text-secondary);">
+                    <span>/plan-sync (housekeeping)</span>
+                    <span>/release (develop → main)</span>
+                    <span>/nightly-tests (cron)</span>
+                </div>
+
+                <div class="hotfix-path">
+                    <div class="hotfix-title">Hotfix Fast Path (Skip Ceremony)</div>
+                    <code style="background: transparent; padding: 0; color: var(--text-primary);">fix branch → implement → /test-suite → /code-review → /pr</code>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <script>
+        // Scroll Progress Bar
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            document.getElementById("progressBar").style.width = scrolled + "%";
+        });
+
+        // Intersection Observer for Fade-up Animations
+        const observerOptions = {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0.15
+        };
+
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                    observer.unobserve(entry.target); // Only animate once
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.fade-up').forEach((element) => {
+            observer.observe(element);
+        });
+    </script>
+</body>
+</html>
