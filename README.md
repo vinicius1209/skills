@@ -44,6 +44,7 @@ directory and you're running.
 |--------|-----------|
 | `seeds/agents/` | 6 AI agent definitions (architect, dev, dba, tester, code-review, qa-smoke) |
 | `seeds/skills/` | Domain knowledge template + 9 pipeline skills forming the SDD pipeline |
+| `seeds/references/` | 6 technical reference scaffolds (FSD, query patterns, forms, dialogs, navigation, shared UI) — framework anti-patterns pre-filled |
 | `seeds/schemas/` | JSON schema for the plan manifest |
 | `seeds/plans/` | Manifest template for new features |
 | `seeds/hooks/` | 8 bash scripts for automated safety gates |

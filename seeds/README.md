@@ -10,12 +10,14 @@ Copy the files into your `.claude/` directory and you're running.
 git clone https://github.com/vinicius1209/skills.git /tmp/ai-seeds
 
 # Copy seeds into your project
-mkdir -p .claude/{agents,skills,schemas,plans,hooks}
+mkdir -p .claude/{agents,skills,schemas,plans,hooks,references}
 cp /tmp/ai-seeds/seeds/agents/*.md .claude/agents/
 # Pipeline skills (each is a folder with a SKILL.md) → .claude/skills/
 cp -r /tmp/ai-seeds/seeds/skills/{discovery,prd,spec,developer,test-suite,code-review,pr,plan-sync,feature} .claude/skills/
 # Domain knowledge skill → rename the template to your domain
 cp -r /tmp/ai-seeds/seeds/skills/domain-template .claude/skills/<your-domain>
+# Technical reference scaffolds (FSD, query patterns, forms, dialogs...) → .claude/references/
+cp /tmp/ai-seeds/seeds/references/*.md .claude/references/
 cp /tmp/ai-seeds/seeds/schemas/*.json .claude/schemas/
 cp /tmp/ai-seeds/seeds/plans/*.json .claude/plans/
 cp /tmp/ai-seeds/seeds/hooks/*.sh .claude/hooks/
@@ -37,6 +39,7 @@ chmod +x .claude/hooks/*.sh
 | `agents/` | `.claude/agents/` | 6 AI agent definitions (architect, dev, dba, tester, code-review, qa-smoke) |
 | `skills/` (pipeline) | `.claude/skills/` | 9 pipeline skills forming the SDD pipeline (discovery, prd, spec, developer, test-suite, code-review, pr, plan-sync, feature) |
 | `skills/domain-template/` | `.claude/skills/<your-domain>/` | Domain knowledge template (SKILL.md + reference templates) |
+| `references/` | `.claude/references/` | 6 technical reference scaffolds (architecture/FSD, query-patterns, forms, dialogs, navigation-surfaces, shared-ui-inventory) — framework anti-patterns pre-filled |
 | `schemas/` | `.claude/schemas/` | JSON schema for the plan manifest |
 | `plans/` | `.claude/plans/` | Manifest template for new features |
 | `hooks/` | `.claude/hooks/` | 8 bash scripts for automated safety gates |
@@ -59,7 +62,7 @@ chmod +x .claude/hooks/*.sh
 2. **Replace `<your-project>`** with your project name
 3. **Replace `<your-github-account>`** (and `<your-repo>`) in the pipeline-skill files with your GitHub username/repo
 4. **Write your domain skill** — fill in `SKILL.md` with your business rules, vocabulary, and schema gotchas
-5. **Write your references** — create `references/*.md` docs for your project's canonical patterns (forms, dialogs, query patterns, navigation surfaces, shared UI inventory)
+5. **Fill in your references** — start from the scaffolds copied to `.claude/references/` (architecture, query-patterns, forms, dialogs, navigation-surfaces, shared-ui-inventory): the framework-level anti-patterns are pre-filled; add your project-specific paths, aliases, and components
 6. **Run `/discovery`** with an informal feature description to test the pipeline
 
 ## Stack Coverage
