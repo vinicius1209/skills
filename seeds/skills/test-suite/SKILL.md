@@ -1,3 +1,9 @@
+---
+name: test-suite
+description: Stage 3.5 — generate tests for files altered by the implementation via the tester agent.
+disable-model-invocation: true
+---
+
 ## Pipeline SDD: Stage 3.5 — Post-Implementation Tests
 
 Use the **tester** agent to generate tests for files altered by the implementation.

@@ -1,3 +1,9 @@
+---
+name: feature
+description: Full SDD pipeline end-to-end — orchestrates discovery through PR using specialized agents.
+disable-model-invocation: true
+---
+
 ## SDD Pipeline — Feature End-to-End
 
 You are the **orchestrator** of the SDD pipeline. Execute all stages automatically

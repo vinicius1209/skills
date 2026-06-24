@@ -1,3 +1,9 @@
+---
+name: pr
+description: Stage 5 — push the current branch and open a structured PR to develop.
+disable-model-invocation: true
+---
+
 ## Pipeline: feature/fix → develop
 
 You are the **PR Manager**. Create structured PRs from feature branches to `develop`.

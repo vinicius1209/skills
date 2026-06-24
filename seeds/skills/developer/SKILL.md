@@ -1,3 +1,9 @@
+---
+name: developer
+description: Stage 3 — implement an existing SPEC via the dev (and dba) agents.
+disable-model-invocation: true
+---
+
 ## Pipeline SDD: Stage 3 — Implementation
 
 Use the **dev** agent to implement an existing SPEC.

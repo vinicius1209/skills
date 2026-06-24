@@ -20,9 +20,13 @@ Then wire them in `.claude/settings.json` (see `seeds/settings.json`).
 |---------|-----------|---------|
 | `PreToolUse` | Before any tool invocation | Block invalid actions |
 | `PostToolUse` | After a tool completes | Auto-stage files, log events |
-| `SubagentStop` | When a subagent finishes | Verify deliverables |
+| `SubagentStop` | When a subagent finishes | Verify deliverables, suggest next step |
 | `Stop` | When the session ends | Log metrics |
-| `SessionStart` | When a session begins | Detect stale plans |
+| `SessionStart` | When a session begins | Detect stale plans, inject context |
+
+> These are the most common of ~27 hook events (others include `UserPromptSubmit`,
+> `SubagentStart`, `PreCompact`, `PostCompact`, `SessionEnd`, etc.) — see the
+> official Claude Code hooks docs for the full list.
 
 ## Included Hooks
 
@@ -33,24 +37,37 @@ Then wire them in `.claude/settings.json` (see `seeds/settings.json`).
 | `verify-deliverables.sh` | SubagentStop | Warn if manifest artifacts don't exist on disk |
 | `detect-stale-plans.sh` | SessionStart | Alert on plans whose branch is already merged |
 | `log-session-metrics.sh` | Stop | Track session stats to CSV |
+| `sdd-context-inject.sh` | SessionStart | Inject the current branch's SDD pipeline state into context |
+| `sdd-next-step.sh` | SubagentStop | Suggest the next pipeline step via `additionalContext` (does NOT mutate the manifest) |
+| `auto-typecheck.sh` | PostToolUse (Write\|Edit) | Run vitest on just the edited test file and report failures (does not run a full project type-check) |
+
+> The last three (`sdd-context-inject.sh`, `sdd-next-step.sh`, `auto-typecheck.sh`)
+> are **informational** — they only inject context or warn, and never block.
 
 ## Writing Your Own Hooks
 
 Hooks are plain bash scripts. They receive context from the AI tool and can:
-- **Block** an action by exiting with non-zero status (PreToolUse only)
-- **Warn** by printing to stderr (all triggers)
-- **Log** by appending to files (all triggers)
+- **Block** an action by exiting with **exit code 2**. Exit 2 blocks only on these
+  events: `PreToolUse`, `UserPromptSubmit`, `Stop`, `PreCompact`, and
+  `UserPromptExpansion`. On other events (e.g. `PostToolUse`, `SessionStart`) exit 2
+  just shows stderr **without** blocking.
+- **Report a non-blocking error** with any other non-zero exit code.
+- **Succeed** with **exit 0** — stdout JSON is processed (e.g.
+  `hookSpecificOutput.additionalContext` injects context).
+- **Warn / log** by printing to stderr or appending to files (all triggers).
 
 ### Pattern: Domain-specific validation hook
 
 ```bash
 #!/bin/bash
-# Blocks creation of files that reference deprecated APIs/patterns
+# Blocks creation of files that reference deprecated APIs/patterns.
+# Wired on PreToolUse, so exit 2 actually blocks the tool call.
 MATCHES=$(grep -rl "deprecatedFunction" "$1" 2>/dev/null)
 if [ -n "$MATCHES" ]; then
-  echo "Blocked: deprecatedFunction reference found in $MATCHES"
-  exit 1
+  echo "Blocked: deprecatedFunction reference found in $MATCHES" >&2
+  exit 2
 fi
+exit 0
 ```
 
 ### When to add a hook

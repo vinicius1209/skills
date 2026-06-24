@@ -1,3 +1,9 @@
+---
+name: prd
+description: Stage 1 — generate a PRD.md for a feature via the architect agent.
+disable-model-invocation: true
+---
+
 ## Pipeline SDD: Stage 1 — PRD (Product Requirements Document)
 
 Use the **architect** agent to generate a PRD.md for the feature below.

@@ -1,5 +1,7 @@
 ---
-description: Syncs stale manifests (PR merged but stage != done) with the real git state
+name: plan-sync
+description: Syncs stale manifests (PR merged but stage != done) with the real git state.
+disable-model-invocation: true
 ---
 
 Updates manifests in `.claude/plans/*/` whose PR was merged but `stage` is still in-progress.

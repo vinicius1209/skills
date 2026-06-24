@@ -10,9 +10,11 @@ Copy the files into your `.claude/` directory and you're running.
 git clone https://github.com/vinicius1209/skills.git /tmp/ai-seeds
 
 # Copy seeds into your project
-mkdir -p .claude/{agents,commands,skills,schemas,plans,hooks}
+mkdir -p .claude/{agents,skills,schemas,plans,hooks}
 cp /tmp/ai-seeds/seeds/agents/*.md .claude/agents/
-cp /tmp/ai-seeds/seeds/commands/*.md .claude/commands/
+# Pipeline skills (each is a folder with a SKILL.md) → .claude/skills/
+cp -r /tmp/ai-seeds/seeds/skills/{discovery,prd,spec,developer,test-suite,code-review,pr,plan-sync,feature} .claude/skills/
+# Domain knowledge skill → rename the template to your domain
 cp -r /tmp/ai-seeds/seeds/skills/domain-template .claude/skills/<your-domain>
 cp /tmp/ai-seeds/seeds/schemas/*.json .claude/schemas/
 cp /tmp/ai-seeds/seeds/plans/*.json .claude/plans/
@@ -33,11 +35,11 @@ chmod +x .claude/hooks/*.sh
 | Folder | Copy to | What it is |
 |--------|---------|-----------|
 | `agents/` | `.claude/agents/` | 6 AI agent definitions (architect, dev, dba, tester, code-review, qa-smoke) |
-| `commands/` | `.claude/commands/` | 9 slash commands forming the SDD pipeline |
-| `skills/` | `.claude/skills/<your-domain>/` | Domain knowledge template (SKILL.md + reference templates) |
+| `skills/` (pipeline) | `.claude/skills/` | 9 pipeline skills forming the SDD pipeline (discovery, prd, spec, developer, test-suite, code-review, pr, plan-sync, feature) |
+| `skills/domain-template/` | `.claude/skills/<your-domain>/` | Domain knowledge template (SKILL.md + reference templates) |
 | `schemas/` | `.claude/schemas/` | JSON schema for the plan manifest |
 | `plans/` | `.claude/plans/` | Manifest template for new features |
-| `hooks/` | `.claude/hooks/` | 5 bash scripts for automated safety gates |
+| `hooks/` | `.claude/hooks/` | 8 bash scripts for automated safety gates |
 | `settings.json` | `.claude/settings.json` | Hook wiring config |
 
 ## The 6-Layer System
@@ -46,16 +48,16 @@ chmod +x .claude/hooks/*.sh
 |-------|-----------|-------------|
 | **Skills** | Knowledge | Injectable domain expertise loaded into agents on demand |
 | **Agents** | Execution | Specialized AI team members with scoped permissions |
-| **Commands** | Coordination | Pipeline stages that invoke the right agent with the right context |
+| **Commands/Skills** | Coordination | Pipeline stages that invoke the right agent with the right context. Commands and skills are unified — both create `/<name>`; the pipeline ships as skills (with `disable-model-invocation`) |
 | **Manifest** | Contract | Tracks feature lifecycle, enables resume + deliverable verification |
 | **Hooks** | Safety | Automated checks that fire on tool events — institutional memory |
 | **References** | Patterns | Canonical docs that prevent reinvention (you write these per project) |
 
 ## After Installation
 
-1. **Replace `<your-domain>`** in all agent and command files with your actual skill name
+1. **Replace `<your-domain>`** in all agent and pipeline-skill files with your actual skill name
 2. **Replace `<your-project>`** with your project name
-3. **Replace `<your-github-account>`** in command files with your GitHub username
+3. **Replace `<your-github-account>`** (and `<your-repo>`) in the pipeline-skill files with your GitHub username/repo
 4. **Write your domain skill** — fill in `SKILL.md` with your business rules, vocabulary, and schema gotchas
 5. **Write your references** — create `references/*.md` docs for your project's canonical patterns (forms, dialogs, query patterns, navigation surfaces, shared UI inventory)
 6. **Run `/discovery`** with an informal feature description to test the pipeline
@@ -70,6 +72,6 @@ These seeds are optimized for:
 - **Architecture**: Feature-Sliced Design (FSD)
 - **Testing**: Vitest, React Testing Library, Playwright, MSW
 
-Using a different stack? The commands, manifest, hooks, and skill template are
-stack-agnostic. Only the agent definitions are stack-specific — adapt them to
+Using a different stack? The pipeline skills, manifest, hooks, and skill template
+are stack-agnostic. Only the agent definitions are stack-specific — adapt them to
 your framework.

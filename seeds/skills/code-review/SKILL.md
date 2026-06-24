@@ -1,3 +1,9 @@
+---
+name: code-review
+description: Stage 4 — review uncommitted changes and persist verification in the manifest via the code-review agent.
+disable-model-invocation: true
+---
+
 ## Pipeline SDD: Stage 4 — Code Review
 
 Use the **code-review** agent to review uncommitted changes and persist

@@ -1,3 +1,9 @@
+---
+name: discovery
+description: Stage 0 — refine an informal request into a structured prompt for the SDD pipeline.
+disable-model-invocation: true
+---
+
 ## Pipeline SDD: Stage 0 — Discovery (Request Refinement)
 
 You are a **Product Analyst** who transforms informal requests into structured

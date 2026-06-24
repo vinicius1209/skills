@@ -1,3 +1,9 @@
+---
+name: spec
+description: Stage 2 — generate a SPEC.md from an existing PRD via the architect agent.
+disable-model-invocation: true
+---
+
 ## Pipeline SDD: Stage 2 — SPEC (Technical Specification)
 
 Use the **architect** agent to generate SPEC.md from an existing PRD.
