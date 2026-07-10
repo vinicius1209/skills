@@ -1,53 +1,43 @@
 # skills
 
-My A.I. home — agent skills, workflows, and spec-driven development tooling.
+Minha casa de A.I. — as skills, agentes e workflows que uso nos meus projetos,
+organizados por domínio. Cada pasta de topo é um domínio independente com suas
+próprias skills e o próprio README explicando o quê e como usar.
 
-## Contents
+## Os domínios
 
-### `sdd/` — Spec-Driven Development
+| Domínio | O que é | Skills |
+|---|---|---|
+| [`dev/`](dev/) | **Spec-Driven Development** — pipeline de desenvolvimento assistido por IA (discovery → prd → spec → developer → test-suite → code-review → pr), com agentes, hooks e references. Portável pra qualquer projeto. | 9 pipeline + `domain-template` |
+| [`brand/`](brand/) | **Marca do Vini** — voz, privacidade, pilares de conteúdo, design de carrossel e sistema de Reels. As skills que uso em vários projetos de conteúdo. | 5 |
+| [`studio/`](studio/) | **Sala de edição de YouTube** — pré-produção, transcrição, ingest, retenção, edição, Reels e criativos sociais. O julgamento editorial do `vinimachado-studio`. | 7 |
 
-A portable, domain-agnostic SDD implementation guide and ecosystem analysis for AI-assisted development.
+## O que é uma skill
 
-| File | Description |
-|------|-------------|
-| [`SDD-GUIDE.md`](sdd/SDD-GUIDE.md) | Complete implementation guide: folder structure, agents, skills, commands, manifest schema, hooks, seeder templates, troubleshooting, and success metrics |
-| [`SDD-VISUAL.html`](sdd/SDD-VISUAL.html) | Interactive visual presentation (open in browser) — pipeline flow, tiered adoption, core concepts, scenario matrix |
-| [`SDD-LANDSCAPE.md`](sdd/SDD-LANDSCAPE.md) | Ecosystem analysis: comparison of custom SDD vs GitHub Spec Kit, OpenSpec, AWS Kiro, BMAD, cc-sdd, and 7 other tools |
+Uma pasta com `SKILL.md` (índice + regras invioláveis) e, quando precisa, uma
+`references/` com os detalhes. O agente carrega a skill quando a tarefa é relevante e
+ela injeta o conhecimento no contexto — pensa numa wiki que só abre na página certa.
 
-#### Quick Start
+Pra usar num projeto novo: copie a pasta da skill pra `.claude/skills/` do projeto. O
+domínio `dev/` traz também agentes, hooks e um `settings.json` de exemplo — veja
+[`dev/README.md`](dev/README.md) pra instalação completa.
 
-1. Read `SDD-GUIDE.md` for the full blueprint
-2. Open `SDD-VISUAL.html` in a browser for the visual overview
-3. Check `SDD-LANDSCAPE.md` to see how your approach compares to existing tools
+## Modelo: snapshot curado
 
-#### The SDD Pipeline
+Este repo é a **vitrine/biblioteca** das skills. As de `brand/` e `studio/` têm uma
+fonte viva rodando dentro dos projetos de origem (`viniciusmachado/` e
+`vinimachado-studio/`); aqui ficam cópias curadas pra consulta e reuso. Ao editar uma
+regra, mantenha **uma direção só de sync** (origem → repo, ou repo → origem) pra não
+divergir. Cada README de domínio anota a fonte viva e os acoplamentos.
+
+## Spec-Driven Development
+
+Toda a metodologia SDD (guia de implementação, comparação com outras ferramentas e a
+apresentação visual) mora em [`dev/docs/`](dev/docs/):
 
 ```
 /discovery → /prd → /spec → /developer → /test-suite → /code-review → /pr
  (refine)    (what)  (how)    (build it)    (test it)     (check it)    (ship it)
 ```
 
-Or just run `/feature` — the orchestrator that does all of the above automatically.
-
-#### Tiers
-
-- **MVP**: 3 agents, 5 pipeline skills, 1 domain skill, 2 references, 1 hook
-- **Quality**: + tester, dba, 4 references, 3 hooks
-- **Full**: + qa-smoke, release, nightly-tests, telemetry hooks
-
-### `seeds/` — Copy-Paste Starter Kit
-
-Ready-to-use files that bootstrap SDD in any project. Copy them into your `.claude/`
-directory and you're running.
-
-| Folder | What it is |
-|--------|-----------|
-| `seeds/agents/` | 6 AI agent definitions (architect, dev, dba, tester, code-review, qa-smoke) |
-| `seeds/skills/` | Domain knowledge template + 9 pipeline skills forming the SDD pipeline |
-| `seeds/references/` | 6 technical reference scaffolds (FSD, query patterns, forms, dialogs, navigation, shared UI) — framework anti-patterns pre-filled |
-| `seeds/schemas/` | JSON schema for the plan manifest |
-| `seeds/plans/` | Manifest template for new features |
-| `seeds/hooks/` | 8 bash scripts for automated safety gates |
-| `seeds/settings.json` | Hook wiring config |
-
-See [`seeds/README.md`](seeds/README.md) for installation instructions.
+Ou rode `/feature` — o orquestrador que faz o pipeline inteiro de uma vez.
