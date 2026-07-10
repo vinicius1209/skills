@@ -1,7 +1,9 @@
-# Seeds — Copy-Paste SDD Starter Kit
+# dev/ — Spec-Driven Development kit
 
-Everything you need to bootstrap Spec-Driven Development in a new project.
-Copy the files into your `.claude/` directory and you're running.
+The **dev** domain of this repo: everything you need to bootstrap Spec-Driven
+Development (SDD) in a new project. Copy the files into your `.claude/` directory
+and you're running. The methodology docs (guide, landscape, visual) live in
+[`docs/`](docs/).
 
 ## Quick Install
 
@@ -11,17 +13,17 @@ git clone https://github.com/vinicius1209/skills.git /tmp/ai-seeds
 
 # Copy seeds into your project
 mkdir -p .claude/{agents,skills,schemas,plans,hooks,references}
-cp /tmp/ai-seeds/seeds/agents/*.md .claude/agents/
+cp /tmp/ai-seeds/dev/agents/*.md .claude/agents/
 # Pipeline skills (each is a folder with a SKILL.md) → .claude/skills/
-cp -r /tmp/ai-seeds/seeds/skills/{discovery,prd,spec,developer,test-suite,code-review,pr,plan-sync,feature} .claude/skills/
+cp -r /tmp/ai-seeds/dev/skills/{discovery,prd,spec,developer,test-suite,code-review,pr,plan-sync,feature} .claude/skills/
 # Domain knowledge skill → rename the template to your domain
-cp -r /tmp/ai-seeds/seeds/skills/domain-template .claude/skills/<your-domain>
+cp -r /tmp/ai-seeds/dev/skills/domain-template .claude/skills/<your-domain>
 # Technical reference scaffolds (FSD, query patterns, forms, dialogs...) → .claude/references/
-cp /tmp/ai-seeds/seeds/references/*.md .claude/references/
-cp /tmp/ai-seeds/seeds/schemas/*.json .claude/schemas/
-cp /tmp/ai-seeds/seeds/plans/*.json .claude/plans/
-cp /tmp/ai-seeds/seeds/hooks/*.sh .claude/hooks/
-cp /tmp/ai-seeds/seeds/settings.json .claude/settings.json
+cp /tmp/ai-seeds/dev/references/*.md .claude/references/
+cp /tmp/ai-seeds/dev/schemas/*.json .claude/schemas/
+cp /tmp/ai-seeds/dev/plans/*.json .claude/plans/
+cp /tmp/ai-seeds/dev/hooks/*.sh .claude/hooks/
+cp /tmp/ai-seeds/dev/settings.json .claude/settings.json
 chmod +x .claude/hooks/*.sh
 
 # Write your domain skill
