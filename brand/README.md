@@ -24,6 +24,6 @@ uma `references/` com os detalhes. Copie a pasta pra `.claude/skills/` do projet
 vai consumir a marca.
 
 > **Snapshot.** Estas são cópias curadas. A fonte viva roda dentro de
-> `viniciusmachado/.claude/skills/` (a landing). Ao editar a regra de marca, atualize
+> `vinimachado/.claude/skills/` (o HQ da marca). Ao editar a regra de marca, atualize
 > lá e traga o snapshot pra cá, ou o contrário — mas mantenha uma direção só pra não
 > divergir.

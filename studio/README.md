@@ -27,7 +27,7 @@ Cada skill é uma pasta com `SKILL.md`. Copie a pasta pra `.claude/skills/` do p
 de edição que vai consumir.
 
 > **Snapshot + acoplamento.** Estas são cópias curadas. A fonte viva roda dentro de
-> `vinimachado-studio/.claude/skills/`, e várias delas citam caminhos locais do estúdio
+> `vinimachado/studio/.claude/skills/`, e várias delas citam caminhos locais do estúdio
 > (`scripts/render_edl.py`, `projects/<slug>/`, `brand/`). Fora do estúdio elas valem
 > como **referência do craft**, não como plug-and-play: sem os scripts e o symlink
 > `brand/`, os comandos não rodam. Ao editar, mantenha uma direção só de sync com o

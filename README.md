@@ -25,8 +25,8 @@ domínio `dev/` traz também agentes, hooks e um `settings.json` de exemplo — 
 ## Modelo: snapshot curado
 
 Este repo é a **vitrine/biblioteca** das skills. As de `brand/` e `studio/` têm uma
-fonte viva rodando dentro dos projetos de origem (`viniciusmachado/` e
-`vinimachado-studio/`); aqui ficam cópias curadas pra consulta e reuso. Ao editar uma
+fonte viva rodando dentro dos projetos de origem (`vinimachado/`, o HQ da marca, e
+`vinimachado/studio/`); aqui ficam cópias curadas pra consulta e reuso. Ao editar uma
 regra, mantenha **uma direção só de sync** (origem → repo, ou repo → origem) pra não
 divergir. Cada README de domínio anota a fonte viva e os acoplamentos.
 
