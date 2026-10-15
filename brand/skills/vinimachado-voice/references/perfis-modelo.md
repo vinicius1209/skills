@@ -4,7 +4,7 @@ Quatro creators brasileiros estudados via web (já que IG bloqueia sem login) qu
 
 ## @lucas_montano — Lucas Montano *(análise empírica de 177 tweets reais)*
 
-Base de dados: 177 tweets coletados via Playwright (`/Users/viniciusmachado/projetos/pessoais/twitter-poster/data/app.db`), abril/maio 2026. **Dados reais, não hipóteses.**
+Base de dados: 177 tweets coletados via Playwright (`/Users/viniciusmachado/projetos/_arquivo/pessoais/twitter-poster/data/app.db`), abril/maio 2026. **Dados reais, não hipóteses.**
 
 ### Distribuição
 - **Idioma:** ~84 EN (founder/dev twitter global), ~23 PT, ~70 short/ambíguos
@@ -137,4 +137,4 @@ Todo post que viraliza nesses 4 perfis tem:
 | Folloni | Estrutura antes/depois + CTA palavra |
 | Timóteo | Minimalismo, uso pontual de reticências |
 
-Source-of-truth: [`/marketing/REFERENCIAS.md`](../../../marketing/REFERENCIAS.md) tem a pesquisa detalhada com mais exemplos.
+Source-of-truth: [`conteudo/REFERENCIAS.md`](../../..conteudo/REFERENCIAS.md) tem a pesquisa detalhada com mais exemplos.

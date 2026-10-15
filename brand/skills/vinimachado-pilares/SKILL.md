@@ -164,10 +164,10 @@ Posts que não cabem nos 5 pilares mas servem ao posicionamento:
 
 **2 posts/semana sustentados valem mais que 4 que furam.** Gravação de Reels em lote quinzenal (2-3 por sessão, mesma luz/camisa). CTA comenta-PALAVRA proibido nos primeiros ~10 posts do reposicionamento; depois máx 1 a cada 4.
 
-Source: `/marketing/PLANO.md` (Sprint atual) e `/marketing/AUDITORIA-IG-2026-06-11.md` (plano de 30 dias).
+Source: `conteudo/PLANO.md` (Sprint atual) e `conteudo/AUDITORIA-IG-2026-06-11.md` (plano de 30 dias).
 
 ## Material de referência
 
 - [`references/pilares-detalhados.md`](references/pilares-detalhados.md) — cada pilar com mais exemplos e variações
-- `/marketing/IDEIAS.md` — banco de ideias de post taggeadas (G01-G10, F01-F08, C01-C06, B01-B05, P01-P07, N01-N07)
-- `/marketing/PLANO.md` — calendário de 30 dias e estratégia
+- `conteudo/IDEIAS.md` — banco de ideias de post taggeadas (G01-G10, F01-F08, C01-C06, B01-B05, P01-P07, N01-N07)
+- `conteudo/PLANO.md` — calendário de 30 dias e estratégia

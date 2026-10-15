@@ -124,7 +124,7 @@ Por enquanto, sequencial roda em ~30s pros 6 carrosséis. Não precisa otimizar.
 
 ## Pipeline 2 — Lead magnets (Markdown → PDF A4)
 
-Script: `marketing/build-leadmagnets.sh`. Template: `marketing/lead-magnets/template.html`.
+Script: `conteudo/build-leadmagnets.sh`. Template: `conteudo/lead-magnets/template.html`.
 
 ### Como rodar
 
@@ -195,7 +195,7 @@ Causa típica: heredoc shell tropeçando em aspas ou caracteres especiais do mar
 
 ### Adicionar novo lead magnet
 
-1. Criar `marketing/lead-magnets/<slug>.md` (markdown puro)
+1. Criar `conteudo/lead-magnets/<slug>.md` (markdown puro)
 2. Primeira linha do md vira o `<title>` do PDF (`# Título do Doc`)
 3. Rodar `bash build-leadmagnets.sh`
-4. PDF aparece em `marketing/preview/<slug>-A4.pdf`
+4. PDF aparece em `conteudo/preview/<slug>-A4.pdf`

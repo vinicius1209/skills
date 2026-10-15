@@ -17,17 +17,21 @@ CSS base que vai em todo carrossel novo. Copia daqui e adapta os blocos `.s1` at
     --vm-surface:        #071321;
     --vm-surface-hover:  #0c1c2f;
     --vm-light:          #ffffff;
-    --vm-light-soft:     #f3f4f6;
+    --vm-light-soft:     #f4f4f5;
 
     /* Brand */
     --vm-primary:        #FFF200;
     --vm-blue:           #007AFF;
+    --vm-blue-hover:     #0066d6;
 
     /* Texto */
     --vm-text:           #f3f4f6;
     --vm-text-dark:      #010A14;
     --vm-text-muted:     #9ca3af;
-    --vm-text-muted-dark:#6b7280;
+    --vm-text-muted-dark:#52525b;
+    --vm-text-soft:      #cbd5e1;
+    --vm-text-meta:      #94a3b8;
+    --vm-line-light-solid:#e4e4e7;
 
     /* Linhas */
     --vm-line:           rgba(255,255,255,0.08);

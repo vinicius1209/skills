@@ -157,12 +157,12 @@ O bordão de vídeo é "Menos chat solto e mais metodologia" — sem "prompt" (a
 - [`references/vocabulario.md`](references/vocabulario.md) — listas completas use/evita
 - [`references/tics-anti-ia.md`](references/tics-anti-ia.md) — catálogo de tics e como reescrever
 - [`references/girias-br.md`](references/girias-br.md) — gírias autênticas e suas grafias
-- `/marketing/LINHA-EDITORIAL.md` — guia editorial completo (source-of-truth)
-- `/marketing/REFERENCIAS.md` — pesquisa detalhada dos perfis-modelo
+- `conteudo/LINHA-EDITORIAL.md` — guia editorial completo (source-of-truth)
+- `conteudo/REFERENCIAS.md` — pesquisa detalhada dos perfis-modelo
 
 ### Fonte empírica externa
 
-- `/Users/viniciusmachado/projetos/pessoais/twitter-poster/data/app.db` (SQLite) — 363 tweets coletados via Playwright, sendo 177 do Lucas Montano. Reaproveitado pra atualizar `perfis-modelo.md` e popular `banco-de-hooks.md` com dados reais em vez de hipóteses. Pra coletar mais: adicionar handles na watchlist do projeto twitter-poster.
+- `/Users/viniciusmachado/projetos/_arquivo/pessoais/twitter-poster/data/app.db` (SQLite) — 363 tweets coletados via Playwright, sendo 177 do Lucas Montano. Reaproveitado pra atualizar `perfis-modelo.md` e popular `banco-de-hooks.md` com dados reais em vez de hipóteses. Pra coletar mais: adicionar handles na watchlist do projeto twitter-poster.
 
 ## Assinatura visual
 

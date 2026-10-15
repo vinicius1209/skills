@@ -9,7 +9,7 @@ próprias skills e o próprio README explicando o quê e como usar.
 | Domínio | O que é | Skills |
 |---|---|---|
 | [`dev/`](dev/) | **Spec-Driven Development** — pipeline de desenvolvimento assistido por IA (discovery → prd → spec → developer → test-suite → code-review → pr), com agentes, hooks e references. Portável pra qualquer projeto. | 9 pipeline + `domain-template` |
-| [`brand/`](brand/) | **Marca do Vini** — voz, privacidade, pilares de conteúdo, design de carrossel e sistema de Reels. As skills que uso em vários projetos de conteúdo. | 5 |
+| [`brand/`](brand/) | **Marca do Vini** — voz, privacidade, pilares de conteúdo, design de carrossel, sistema de Reels e formato por rede. As skills que uso em vários projetos de conteúdo. | 6 |
 | [`studio/`](studio/) | **Sala de edição de YouTube** — pré-produção, transcrição, ingest, retenção, edição, Reels e criativos sociais. O julgamento editorial do `vinimachado-studio`. | 7 |
 
 ## O que é uma skill

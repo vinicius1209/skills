@@ -14,7 +14,9 @@ Sistema **único e unificado** pra todo carrossel, lead magnet e surface visual 
 - **Padding interno:** `90px 84px` em cada slide
 - **Print-to-pdf via Chrome:** `@page { size: 1080px 1350px; margin: 0; }`
 
-## Paleta canônica (extraída de `src/index.css`)
+## Paleta canônica (extraída de `site/src/index.css`, conferida em 15/10/2026)
+
+Tokens completos prontos pra colar em qualquer HTML: [`marca/tokens.css`](../../../marca/tokens.css) (inclui raios, kicker e botões do site). Sistema da landing (pesos, botões, cards, ritmo de seções): `marca/BRAND-VM.md` seção 5.1.
 
 ```css
 :root {
@@ -23,17 +25,23 @@ Sistema **único e unificado** pra todo carrossel, lead magnet e surface visual 
   --vm-surface:        #071321;   /* navy mais claro pra cards/painéis em fundo escuro */
   --vm-surface-hover:  #0c1c2f;   /* hover/elevated state em surface escuro */
   --vm-light:          #ffffff;   /* surfaces claros (drawer, bento cards) */
-  --vm-light-soft:     #f3f4f6;   /* surface claro suave */
+  --vm-light-soft:     #f4f4f5;   /* card claro (zinc-100, igual à landing) */
+  --vm-line-light-solid:#e4e4e7;  /* borda de card claro */
+  --vm-deep:           #020508;   /* fundo quase preto da seção "sobre" */
 
   /* Brand */
   --vm-primary:        #FFF200;   /* Brand Yellow — destaque, CTAs, sublinhados */
   --vm-blue:           #007AFF;   /* Brand Blue / AI Glow — logo, ▮ em fundo claro, eyebrow */
+  --vm-blue-hover:     #0066d6;   /* hover do azul / link em fundo claro */
 
   /* Texto */
   --vm-text:           #f3f4f6;   /* texto principal em fundo escuro */
   --vm-text-dark:      #010A14;   /* texto principal em fundo claro */
+  --vm-text-soft:      #cbd5e1;   /* corpo/descrição em fundo escuro (slate-300) */
+  --vm-text-meta:      #94a3b8;   /* meta e rodapé em fundo escuro (slate-400) */
   --vm-text-muted:     #9ca3af;   /* texto secundário em fundo escuro */
-  --vm-text-muted-dark:#6b7280;   /* texto secundário em fundo claro */
+  --vm-text-muted-dark:#52525b;   /* texto secundário em fundo claro (zinc-600) */
+  --vm-text-subtle-dark:#71717a;  /* meta em fundo claro (zinc-500) */
 
   /* Linhas */
   --vm-line:           rgba(255,255,255,0.08);  /* divisor em fundo escuro */
@@ -42,8 +50,8 @@ Sistema **único e unificado** pra todo carrossel, lead magnet e surface visual 
 ```
 
 **Restrições:**
-- **Não inventar cor nova.** A paleta é fechada — yellow, blue, navy, branco, mais cinzas de texto.
-- **Gradiente proibido.** Geometria pura, cor chapada.
+- **Não inventar cor nova.** A paleta é fechada — yellow, blue, navy, branco, mais os neutros da landing (zinc no claro, slate no escuro). Nada de cinza *gray* antigo (`#6b7280`).
+- **Gradiente proibido no conteúdo.** Geometria pura, cor chapada. (A landing usa glow radial azul atrás do Vini no hero; isso é do site, não vai pro carrossel.)
 - **Sombra só quando funcional** (glow no `▮` se animado, drop-shadow leve em pill bubble). Nada de "card bonito com shadow grande".
 
 ## Tipografia — SF Apple
@@ -103,7 +111,7 @@ Ritmo típico canônico: `dark, light, light, dark, surface, light, dark` (capa 
 
 ### B — Carta (off-white editorial)
 
-**Quando o feed mostra:** capa `.slide.light` (#ffffff ou #f3f4f6) com texto navy, **zero pill amarelo na capa**, peso editorial, fonte grande, ar generoso.
+**Quando o feed mostra:** capa `.slide.light` (#ffffff ou #f4f4f5) com texto navy, **zero pill amarelo na capa**, peso editorial, fonte grande, ar generoso.
 
 **Propósito:** "pensamento em voz alta", carta pessoal, post-mortem honesto, narrativa com vulnerabilidade. Atende **Jean-prejuízo** (carta sobre erro caro) e fio condutor pessoal+tech (foto com ponte).
 
@@ -132,7 +140,7 @@ Ritmo típico canônico: `dark, light, light, dark, surface, light, dark` (capa 
 - Slides 2-6 podem alternar entre prints e blocos terminal/árvore
 - Slide 7 fecha com pill amarela menor, foco "vem ver o resto" em vez de "compra/comenta"
 
-**Anonimização obrigatória:** screenshot de prime-sales-hub nunca mostra slugs reais, IDs de cliente, endpoints da Prime. Renomear pra `sales-hub-demo`, `cliente-A`, `endpoint-X`. Ver `marketing/assets/sessoes/architect-pipeline-safe.png` como referência do que passou no gate.
+**Anonimização obrigatória:** screenshot de prime-sales-hub nunca mostra slugs reais, IDs de cliente, endpoints da Prime. Renomear pra `sales-hub-demo`, `cliente-A`, `endpoint-X`. Ver `conteudo/assets/sessoes/architect-pipeline-safe.png` como referência do que passou no gate.
 
 ### Regra de rotação no feed
 
@@ -155,7 +163,7 @@ Linha de 6 posts (= 2 fileiras do grid IG):
 
 ## Logo VM (SVG vetorial)
 
-Source: `src/components/Preloader.tsx`. Usa `currentColor`, então pinta com a cor herdada (parent CSS `color`).
+Source: `site/src/components/Preloader.tsx`. Usa `currentColor`, então pinta com a cor herdada (parent CSS `color`).
 
 ```html
 <svg width="170" height="88" viewBox="0 0 170 88" fill="none" xmlns="http://www.w3.org/2000/svg" aria-label="VM">
@@ -183,8 +191,8 @@ A marca "respira" via header + assinatura no slide 7. Não precisa explodir na c
 `▮` é a marca visual mais econômica do Vini. Aparece no header de todo slide do meio, no eyebrow de seções, antes de qualquer nome de produto.
 
 **Regra de cor (crítica):**
-- **Em fundo claro** (`.slide.light`, `.slide.surface` com card branco): `color: #007AFF` (azul). Source de verdade: `src/components/NavDrawer.tsx:138` (eyebrow "▮ navegação").
-- **Em fundo escuro** (`.slide.dark`, `.slide.surface`): `color: #FFF200` (amarelo). Source: `src/components/ProductHero.tsx:74` (eyebrow "▮ em breve · lista de espera aberta").
+- **Em fundo claro** (`.slide.light`, `.slide.surface` com card branco): `color: #007AFF` (azul). Source de verdade: `site/src/components/NavDrawer.tsx:138` (eyebrow "▮ navegação").
+- **Em fundo escuro** (`.slide.dark`, `.slide.surface`): `color: #FFF200` (amarelo). Source: `site/src/sections/Spec4Landing.tsx` (badge "▮ PDF grátis").
 
 **Onde usar:**
 - Header dos slides do meio (2-6): só `▮` na esquerda + meta-label uppercase na direita
@@ -251,7 +259,7 @@ Detalhamento completo em [`references/padrao-7-slides.md`](references/padrao-7-s
 ## Gimmicks visuais (catálogo)
 
 ### 1. Pill amarelo bubble (versão estática pra carrossel)
-CTA do slide 7. Pill grande `rounded-full`, fundo `--vm-primary`, texto preto bold. Em landing tem hover-bubble animado; no carrossel é só o estado de repouso.
+CTA do slide 7. Pill grande `rounded-full`, fundo `--vm-primary`, texto preto bold. É convenção do carrossel: **no site os botões têm raio 10px (4px no hero), peso 750**, com hover-bubble animado.
 
 ### 2. Sublinhado handwritten
 Palavra-chave em amarelo com sublinhado SVG handwritten (`/images/svg/line.svg` ou inline equivalente). Usado pra destacar 1 palavra por bordão — não abusa.
@@ -318,7 +326,7 @@ Detalhes completos em [`references/build-pipeline.md`](references/build-pipeline
 
 ```
 vinimachado/
-└── marketing/
+└── conteudo/
     ├── carrosseis/                    ← HTMLs source
     │   ├── 01-*.html
     │   ├── 02-*.html
@@ -339,6 +347,6 @@ vinimachado/
 - [`references/design-system.md`](references/design-system.md) — CSS skeleton completo + tokens VM + snippets dos gimmicks
 - [`references/padrao-7-slides.md`](references/padrao-7-slides.md) — anatomia de cada slide com snippets
 - [`references/build-pipeline.md`](references/build-pipeline.md) — como o build.sh funciona, troubleshooting
-- **Fonte canônica da paleta:** `src/index.css` (`@theme` block) — se mudar lá, mudar aqui
-- **Fonte canônica do logo SVG:** `src/components/Preloader.tsx`
-- **Fonte canônica da regra de cor do `▮`:** `src/components/NavDrawer.tsx` (azul-em-claro) + `src/components/ProductHero.tsx` (amarelo-em-escuro)
+- **Fonte canônica da paleta:** `site/src/index.css` (`@theme` block) — se mudar lá, mudar aqui
+- **Fonte canônica do logo SVG:** `site/src/components/Preloader.tsx`
+- **Fonte canônica da regra de cor do `▮`:** `site/src/components/NavDrawer.tsx` (azul-em-claro, `▮ navegação`) + `site/src/sections/Spec4Landing.tsx` (amarelo-em-escuro, `▮ PDF grátis`)

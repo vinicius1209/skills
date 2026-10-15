@@ -75,7 +75,7 @@ Regras duras pra screenshot, mock de terminal, ficha de obra ou qualquer prova t
 
 - **"Prime Sales Hub" como nome de projeto PODE aparecer** (decisão canônica: tela normal, ambiente local limpo, seeders fictícias).
 - **NUNCA aparecem:** URL real de repositório, número de PR, nome real de RPC/hook/tabela, hash de commit, slug de cliente, endpoint de produção. Trocar pelos equivalentes do de-para.
-- **Gate obrigatório:** `marketing/drafts/C-01-assets/CHECKLIST-ANONIMIZACAO.md` tem o de-para campo a campo (ex: `useUpdateSeller` → `useUpdateOwner`, `/gestao/transferencias` → `/admin/transfers`). Toda peça de tratamento C passa por ele ANTES do build.
+- **Gate obrigatório:** `conteudo/drafts/C-01-assets/CHECKLIST-ANONIMIZACAO.md` tem o de-para campo a campo (ex: `useUpdateSeller` → `useUpdateOwner`, `/gestao/transferencias` → `/admin/transfers`). Toda peça de tratamento C passa por ele ANTES do build.
 - Flags perigosas de ferramenta (ex: `--dangerously-skip...`) não aparecem em conteúdo público.
 
 ## Banco de casos reais (gate de história em 1ª pessoa)

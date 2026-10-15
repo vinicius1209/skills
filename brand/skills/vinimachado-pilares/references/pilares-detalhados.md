@@ -190,4 +190,4 @@ Story carrossel: primeira tela do app do mentorado (com permissão) → terceira
 - **Antes/depois:** print da primeira mensagem de aluno + print da terceira sessão (com permissão)
 - **Polaroid:** foto do setup + frase curta sobre o que tô construindo hoje
 
-Banco completo: [`/marketing/IDEIAS.md`](../../../../marketing/IDEIAS.md).
+Banco completo: [`conteudo/IDEIAS.md`](../../../..conteudo/IDEIAS.md).

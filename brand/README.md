@@ -1,7 +1,7 @@
 # brand/ — Sistema de marca do Vini
 
 O **cérebro de marca** do Vinicius Machado: voz, privacidade, pilares de conteúdo,
-design dos carrosséis e o sistema de Reels. É o conjunto de skills que ele usa em
+design dos carrosséis, o sistema de Reels e o formato de cada rede. É o conjunto de skills que ele usa em
 **vários projetos** (landing, canal do YouTube, estúdio de edição, carrosséis de IG).
 
 Não invente voz, paleta, privacidade ou estratégia por conta própria: carregue a
@@ -16,6 +16,7 @@ skill certa e leia de lá.
 | [`vinimachado-pilares`](skills/vinimachado-pilares/) | Os 5 pilares de conteúdo (Glossário Humano, Ferramenta da Semana, Caso Real, Bastidor da Mentoria, Prompt da Semana), o ICP "Jean" e o papel de cada formato no algoritmo IG. (1 reference) |
 | [`vinimachado-design`](skills/vinimachado-design/) | Sistema de design dos carrosséis: paleta navy/yellow/blue, tipografia SF, formato 1080×1350, padrão dos 7 slides, gimmicks e pipeline de build. (3 references) |
 | [`vinimachado-reels`](skills/vinimachado-reels/) | Sistema de Reels VM 1080×1920: câmera full-bleed embaixo (40%) + cards informativos no topo + áudio original. |
+| [`vinimachado-redes`](skills/vinimachado-redes/) | Formato, tamanho, CTA e cadência de Instagram, X e LinkedIn, e como adaptar uma peça pras três sem copia-e-cola. |
 
 ## Como usar
 

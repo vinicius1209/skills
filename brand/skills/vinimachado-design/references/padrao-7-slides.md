@@ -276,4 +276,4 @@ Depois do HTML pronto:
 - [ ] `▮` está azul em slide light e amarelo em slide dark/surface?
 - [ ] Brand reduzido: slides 2-6 têm só `▮` no header (não `vinimachado.dev`)?
 - [ ] Submete pro `content-reviewer` (gate anti-IA-tics + privacy)
-- [ ] Atualiza `marketing/IDEIAS.md` na tabela "Carrosséis em produção"
+- [ ] Atualiza `conteudo/IDEIAS.md` na tabela "Carrosséis em produção"

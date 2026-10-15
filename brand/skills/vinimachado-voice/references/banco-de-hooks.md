@@ -2,7 +2,7 @@
 
 Hooks já testados pelos perfis-modelo do Vini. Cada um tem um **molde** (estrutura) que pode ser preenchido com tema novo. Use isso pra abrir carrosséis, captions, Reels e tweets sem inventar do zero.
 
-Fonte principal: 177 tweets do `@lucas_montano` coletados em `/Users/viniciusmachado/projetos/pessoais/twitter-poster/data/app.db` + análise de Folloni / Mano Deyvin / Timóteo.
+Fonte principal: 177 tweets do `@lucas_montano` coletados em `/Users/viniciusmachado/projetos/_arquivo/pessoais/twitter-poster/data/app.db` + análise de Folloni / Mano Deyvin / Timóteo.
 
 ---
 
